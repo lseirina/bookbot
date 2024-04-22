@@ -11,7 +11,6 @@ def _get_part_text(text: str, start: int, size: int):
     new_text = text[start:]
     pnct = ['.', ',', '?', '!', ':', ';']
     while size > 0:
-
         try:
             if new_text[size-1] in pnct and new_text[size-2] in pnct:
                 size -= 3
