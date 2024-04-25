@@ -61,3 +61,17 @@ async def process_continue_command(message: Message):
         ),
     )
 
+
+@router.message(Command(commands='bookmarks'))
+async def process_bookmark_command(message: Message):
+    if user_db[message.from_user.id]['bookmarks']:
+        await message.answer(
+            text=LEXICON['bookmarks'],
+            reply_markup=create_bookmarks_keyboard(
+                *user_db[message.from_user.id]['page']
+            )
+        )
+    else:
+        await message.answer(
+            text=LEXICON['no_bookmarks']
+        )
