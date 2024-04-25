@@ -17,6 +17,7 @@ from keyboards.bookmarks_kb import (
 )
 from database.database import user_db, user_dict_templates
 from lexicon.lexicon import LEXICON
+from services.file_handling import book
 
 
 router = Router()
@@ -32,3 +33,17 @@ async def process_start_command(message: Message):
 @router.message(Command(commands='help'))
 async def process_help_command(message: Message):
     await message.answer(LEXICON[message.text])
+
+
+@router.message(Command(commands='beginning'))
+async def process_beginning_command(message: Message):
+    user_db[message.from_user.id]['page'] = 1
+    text = book[user_db[message.from_user.id]['page']]
+    await message.answer(
+        text=text,
+        reply_markup=create_pagination_keyboard(
+            'backward',
+            f'{user_db[message.from_user.id]["page"]}/len(book)',
+            'forward'
+        )
+    )
