@@ -91,3 +91,18 @@ async def process_forward_press(callback: CallbackQuery):
         )
     )
     await callback.answer()
+
+
+@router.callback_query(F.data == 'backward')
+async def process_backward_press(callback: CallbackQuery):
+    if user_db[callback.from_user.id]['page'] > 1:
+        user_db[callback.from_user.id]['page'] -= 1
+        await callback.message.edit_text(
+            text=book[user_db[callback.from_user.id]['page']],
+            reply_markup=create_pagination_keyboard(
+                'backward',
+                f'{user_db[callback.from_user.id]["page"]}/{len(book)}',
+                'forward',
+            )
+        )
+    await callback.answer()
