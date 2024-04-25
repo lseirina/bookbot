@@ -1,7 +1,7 @@
 from copy import deepcopy
 
-from aiogram import Router
-from aiogram.types import Message
+from aiogram import Router, F
+from aiogram.types import Message, CallbackQuery
 from aiogram.filters import (
     Command,
     CommandStart,
@@ -75,3 +75,19 @@ async def process_bookmark_command(message: Message):
         await message.answer(
             text=LEXICON['no_bookmarks']
         )
+
+
+@router.callback_query(F.data == 'forward')
+async def process_forward_press(callback: CallbackQuery):
+    if user_db[callback.from_user.id]['page'] < len(book):
+        user_db[callback.from_user.id]['page'] += 1
+    callback.message.edit_text(
+        text=book[user_db[callback.from_user.id]['page']],
+        reply_markup=create_pagination_keyboard(
+            'backward',
+            f'{user_db[callback.from_user.id]["page"]/{len(book)}}',
+            'forward'
+
+        )
+    )
+    await callback.answer()
