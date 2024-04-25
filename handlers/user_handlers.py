@@ -21,8 +21,14 @@ from lexicon.lexicon import LEXICON
 
 router = Router()
 
+
 @router.message(CommandStart)
 async def process_start_command(message: Message):
     await message.answer(LEXICON[message.text])
     if message.from_user.id not in user_db:
         user_db[message.from_user.id] = deepcopy(user_dict_templates)
+
+
+@router.message(Command(commands='help'))
+async def process_help_command(message: Message):
+    await message.answer(LEXICON[message.text])
