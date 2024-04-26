@@ -138,3 +138,10 @@ async def process_edit_press(callback: CallbackQuery):
             *user_db[callback.from_user.id]['bookmarks']
         )
     )
+
+
+@router.callback_query(F.data == 'cancel')
+async def process_cancel_press(callback: CallbackQuery):
+    await callback.message.edit_text(
+        text=LEXICON['cancel_text']
+    )
