@@ -106,3 +106,11 @@ async def process_backward_press(callback: CallbackQuery):
             )
         )
     await callback.answer()
+
+
+@router.callback_query(lambda x: '/' in x.data and x.data.replace('/', '').isdigit())
+async def process_page_press(callback: CallbackQuery):
+    user_db[callback.from_user.id]['bookmarks'].add(
+        user_db[callback.from_user.id]['page']
+    )
+    await callback.answer('The page is added to the bookmarks')
