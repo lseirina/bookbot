@@ -128,3 +128,13 @@ async def process_bookmark_press(callback: CallbackQuery):
             'forward',
         )
     )
+
+
+@router.callback_query(F.data == 'edit_bookmarks')
+async def process_edit_press(callback: CallbackQuery):
+    await callback.message.edit_text(
+        text=LEXICON[callback.data],
+        reply_markup=create_edit_keyboard(
+            *user_db[callback.from_user.id]['bookmarks']
+        )
+    )

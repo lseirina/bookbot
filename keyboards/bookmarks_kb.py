@@ -42,3 +42,4 @@ def create_edit_keyboard(*args: int) -> InlineKeyboardMarkup:
     ))
 
     return kb_builder.as_markup()
+
