@@ -114,3 +114,17 @@ async def process_page_press(callback: CallbackQuery):
         user_db[callback.from_user.id]['page']
     )
     await callback.answer('The page is added to the bookmarks')
+
+
+@router.callback_query(IsDigitCallbackData)
+async def process_bookmark_press(callback: CallbackQuery):
+    text = book(int(callback.data))
+    user_db[callback.from_user.id]['page'] = int(callback.data)
+    await callback.message.edit_text(
+        text=text,
+        reply_markup=create_pagination_keyboard(
+            'backward',
+            f'{user_db[callback.from_user.id]["page"]/{len(book)}}',
+            'forward',
+        )
+    )
