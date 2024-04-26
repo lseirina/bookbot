@@ -145,3 +145,20 @@ async def process_cancel_press(callback: CallbackQuery):
     await callback.message.edit_text(
         text=LEXICON['cancel_text']
     )
+
+
+@router.callback_query(IsDelBookmarkCallbackData)
+async def process_del_bookmark_press(callback: CallbackQuery):
+    user_db[callback.from_user.id]['bookmarks'].remove(
+        int(callback.data[:-3])
+    )
+    if user_db[callback.from_user.id]['bookmarks']:
+        await callback.message.edit_text(
+            text=LEXICON['/bookmarks'],
+            reply_markup=create_bookmarks_keyboard(
+                *user_db[callback.from_user.id]['bookmarks']
+            )
+        )
+    await callback.message.edit_text(
+        text=LEXICON['no_bookmarks']
+    )
