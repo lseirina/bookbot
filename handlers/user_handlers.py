@@ -66,7 +66,7 @@ async def process_continue_command(message: Message):
 async def process_bookmark_command(message: Message):
     if user_db[message.from_user.id]['bookmarks']:
         await message.answer(
-            text=LEXICON['/bookmarks'],
+            text=LEXICON[message.text],
             reply_markup=create_bookmarks_keyboard(
                 *user_db[message.from_user.id]['bookmarks']
             )
@@ -82,15 +82,15 @@ async def process_forward_press(callback: CallbackQuery):
     print(user_db)
     if user_db[callback.from_user.id]['page'] < len(book):
         user_db[callback.from_user.id]['page'] += 1
-    callback.message.edit_text(
-        text=book[user_db[callback.from_user.id]['page']],
-        reply_markup=create_pagination_keyboard(
-            'backward',
-            f'{user_db[callback.from_user.id]["page"]}/{len(book)}',
-            'forward'
+        await callback.message.edit_text(
+            text=book[user_db[callback.from_user.id]['page']],
+            reply_markup=create_pagination_keyboard(
+                'backward',
+                f'{user_db[callback.from_user.id]["page"]}/{len(book)}',
+                'forward'
 
+            )
         )
-    )
     await callback.answer()
 
 
@@ -117,7 +117,7 @@ async def process_page_press(callback: CallbackQuery):
     await callback.answer('The page is added to the bookmarks')
 
 
-@router.callback_query(IsDigitCallbackData)
+@router.callback_query(IsDigitCallbackData())
 async def process_bookmark_press(callback: CallbackQuery):
     text = book(int(callback.data))
     user_db[callback.from_user.id]['page'] = int(callback.data)
@@ -148,7 +148,7 @@ async def process_cancel_press(callback: CallbackQuery):
     )
 
 
-@router.callback_query(IsDelBookmarkCallbackData)
+@router.callback_query(IsDelBookmarkCallbackData())
 async def process_del_bookmark_press(callback: CallbackQuery):
     user_db[callback.from_user.id]['bookmarks'].remove(
         int(callback.data[:-3])

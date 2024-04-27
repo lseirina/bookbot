@@ -2,7 +2,7 @@ LEXICON: dict[str, str] = {
     'forward': '>>',
     'backward': '<<',
     '/start': '<b>Hello, reader</b>\n\nThis is a bot,'
-              'where you can read The Martian Chronicles\n\n'
+              'where you can read Pride and Prejudice\n\n'
               'To see a list of available commands, type /help',
     '/help': '<b>This is a reader-bot</b>\n\nAvailable commands\n\n'
              '/beginning - go to the begining of the book\n'
