@@ -119,7 +119,7 @@ async def process_page_press(callback: CallbackQuery):
 
 @router.callback_query(IsDigitCallbackData())
 async def process_bookmark_press(callback: CallbackQuery):
-    text = book(int(callback.data))
+    text = book[int(callback.data)]
     user_db[callback.from_user.id]['page'] = int(callback.data)
     await callback.message.edit_text(
         text=text,
