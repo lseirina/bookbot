@@ -4,7 +4,7 @@ LEXICON: dict[str, str] = {
     '/start': '<b>Hello, reader</b>\n\nThis is a bot,'
               'where you can read The Martian Chronicles\n\n'
               'To see a list of available commands, type /help',
-    '/hepl': '<b>This is a reader-bot</b>\n\nAvailable commands\n\n'
+    '/help': '<b>This is a reader-bot</b>\n\nAvailable commands\n\n'
              '/beginning - go to the begining of the book\n'
              '/continue - continue to read\n/bookmarks - to see the list'
              'of bookmarks\n/help - help with the bot\n\nTo save a bookmark - '

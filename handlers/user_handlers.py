@@ -23,12 +23,12 @@ from services.file_handling import book
 router = Router()
 
 
-@router.message(CommandStart)
+@router.message(CommandStart())
 async def process_start_command(message: Message):
     await message.answer(LEXICON[message.text])
     if message.from_user.id not in user_db:
         user_db[message.from_user.id] = deepcopy(user_dict_templates)
-
+        print(user_db)
 
 @router.message(Command(commands='help'))
 async def process_help_command(message: Message):
@@ -43,7 +43,7 @@ async def process_beginning_command(message: Message):
         text=text,
         reply_markup=create_pagination_keyboard(
             'backward',
-            f'{user_db[message.from_user.id]["page"]}/len(book)',
+            f'{user_db[message.from_user.id]["page"]}/{len(book)}',
             'forward'
         )
     )
@@ -66,9 +66,9 @@ async def process_continue_command(message: Message):
 async def process_bookmark_command(message: Message):
     if user_db[message.from_user.id]['bookmarks']:
         await message.answer(
-            text=LEXICON['bookmarks'],
+            text=LEXICON['/bookmarks'],
             reply_markup=create_bookmarks_keyboard(
-                *user_db[message.from_user.id]['page']
+                *user_db[message.from_user.id]['bookmarks']
             )
         )
     else:
@@ -79,13 +79,14 @@ async def process_bookmark_command(message: Message):
 
 @router.callback_query(F.data == 'forward')
 async def process_forward_press(callback: CallbackQuery):
+    print(user_db)
     if user_db[callback.from_user.id]['page'] < len(book):
         user_db[callback.from_user.id]['page'] += 1
     callback.message.edit_text(
         text=book[user_db[callback.from_user.id]['page']],
         reply_markup=create_pagination_keyboard(
             'backward',
-            f'{user_db[callback.from_user.id]["page"]/{len(book)}}',
+            f'{user_db[callback.from_user.id]["page"]}/{len(book)}',
             'forward'
 
         )
@@ -124,7 +125,7 @@ async def process_bookmark_press(callback: CallbackQuery):
         text=text,
         reply_markup=create_pagination_keyboard(
             'backward',
-            f'{user_db[callback.from_user.id]["page"]/{len(book)}}',
+            f'{user_db[callback.from_user.id]["page"]}/{len(book)}',
             'forward',
         )
     )

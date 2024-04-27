@@ -21,6 +21,7 @@ def _get_part_text(text: str, start: int, size: int):
                 size -= 1
         except Exception:
             size = len(new_text)
+    return new_text, len(new_text)
 
 
 def prepare_book(path: str) -> None:
@@ -36,4 +37,4 @@ def prepare_book(path: str) -> None:
         start += (PAGE_SIZE - (PAGE_SIZE - len_page))
 
 
-prepare_book(os.path.join(sys.path[0], os.path.normpath[BOOK_PATH]))
+prepare_book(os.path.join(sys.path[0], os.path.normpath(BOOK_PATH)))
