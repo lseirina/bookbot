@@ -34,7 +34,7 @@ def create_edit_keyboard(*args: int) -> InlineKeyboardMarkup:
     for button in sorted(args):
         kb_builder.row(InlineKeyboardButton(
             text=f"{LEXICON['del']} {button} - {book[button][:100]}",
-            callback_data='f{button}del',
+            callback_data=f'{button}del',
         ))
     kb_builder.row(InlineKeyboardButton(
         text=LEXICON['cancel'],
@@ -42,4 +42,3 @@ def create_edit_keyboard(*args: int) -> InlineKeyboardMarkup:
     ))
 
     return kb_builder.as_markup()
-

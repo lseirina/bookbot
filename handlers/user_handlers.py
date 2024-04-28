@@ -160,6 +160,7 @@ async def process_del_bookmark_press(callback: CallbackQuery):
                 *user_db[callback.from_user.id]['bookmarks']
             )
         )
-    await callback.message.edit_text(
-        text=LEXICON['no_bookmarks']
-    )
+    else:
+        await callback.message.edit_text(
+            text=LEXICON['no_bookmarks']
+        )
