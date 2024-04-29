@@ -1,4 +1,4 @@
-from aiogram import Bot, Dispatcher
+from aiogram import Bot, Dispatcher, F
 from aiogram.filters import CommandStart
 from aiogram.filters.callback_data import CallbackData
 from aiogram.types import (
@@ -48,19 +48,25 @@ async def process_start_command(message: Message):
     )
 
 
-
-@dp.callback_query(GoodsCallbackDataFactory.filter())
-async def process_category_press(callback: CallbackQuery,
-                                 callback_data: GoodsCallbackDataFactory
-                                 ):
+@dp.callback_query(GoodsCallbackDataFactory.filter(F.id_category == 1))
+async def procces_category_press(callback: CallbackQuery,
+                                 callback_data=GoodsCallbackDataFactory):
     await callback.message.answer(text=callback_data.pack())
     await callback.answer()
 
 
-@dp.callback_query()
-async def procces_button_press(callback: CallbackQuery):
-    await callback.model_dump_json(indent=4, exclude_none=True)
-    await callback.answer()
+# @dp.callback_query(GoodsCallbackDataFactory.filter())
+# async def process_category_press(callback: CallbackQuery,
+#                                  callback_data: GoodsCallbackDataFactory
+#                                  ):
+#     await callback.message.answer(text=callback_data.pack())
+#     await callback.answer()
+
+
+# @dp.callback_query()
+# async def procces_button_press(callback: CallbackQuery):
+#     await callback.model_dump_json(indent=4, exclude_none=True)
+#     await callback.answer()
 
 
 if __name__ == '__main__':
