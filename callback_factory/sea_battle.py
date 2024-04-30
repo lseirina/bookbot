@@ -1,6 +1,7 @@
 import copy
 
 from aiogram import Bot, Dispatcher
+from aiogram.exceptions import TelegramBadRequest
 from aiogram.filters import CommandStart
 from aiogram.types import (
     CallbackQuery,
@@ -80,3 +81,30 @@ async def process_start_command(message: Message):
         text=LEXICON['/start'],
         reply_markup=get_field_keyboard(message.from_user.id)
     )
+
+
+@dp.callback_query(FieldCallbackFactory.filter())
+async def process_category_press(callback: CallbackQuery,
+                                 callback_data: FieldCallbackFactory):
+    field = callback.from_user.id['field']
+    ships = callback.from_user.id['ships']
+    if field[callback_data.x][callback_data.y] == 0 and \
+            ships[callback_data.x][callback_data.y] == 0:
+        field[callback_data.x][callback_data.y] = 1
+        answer = LEXICON['miss']
+    elif field[callback_data.x][callback_data.y] == 0 and \
+            ships[callback_data.x][callback_data.y] == 1:
+        field[callback_data.x][callback_data.y] = 2
+        answer = LEXICON['hit']
+    else:
+        answer = LEXICON['used']
+
+    try:
+        await callback.message.edit_text(
+            text=LEXICON['next_move'],
+            reply_mark=get_field_keyboard(callback.from_user.id)
+        )
+    except TelegramBadRequest:
+        pass
+
+    await callback.answer(answer)
