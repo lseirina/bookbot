@@ -50,9 +50,33 @@ class FieldCallbackFactory(CallbackData, prifix='user_field'):
 
 def reset_field(user_id: int) -> None:
     users[user_id]['ships'] = copy.deepcopy(ships)
-    users[user_id]['filds'] = [
+    users[user_id]['field'] = [
 # The loop [0 for _ in range(FIELD_SIZE)] for _ in range(FIELD_SIZE) is
 # a nested list comprehension
         [0 for _ in range(FIELD_SIZE)]
         for _ in range(FIELD_SIZE)
     ]
+
+
+def get_field_keyboard(user_id: int) -> InlineKeyboardMarkup:
+    array_buttons: list[int, list[int]] = []
+    for i in range(FIELD_SIZE):
+        array_buttons.append([])
+        for j in range(FIELD_SIZE):
+            array_buttons[i].append(InlineKeyboardButton(
+                text=LEXICON[users[user_id]['field'][i][j]],
+                callback_data=FieldCallbackFactory(x=i, y=j).pack()
+            ))
+
+    return InlineKeyboardMarkup(inline_keyboard=array_buttons)
+
+
+@dp.message(CommandStart)
+async def process_start_command(message: Message):
+    if message.from_user.id not in users:
+        users[message.from_user.id] = {}
+    reset_field(message.from_user.id)
+    await message.answer(
+        text=LEXICON['/start'],
+        reply_markup=get_field_keyboard(message.from_user.id)
+    )
