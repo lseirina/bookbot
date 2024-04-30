@@ -47,3 +47,12 @@ class FieldCallbackFactory(CallbackData, prifix='user_field'):
     x: int
     y: int
 
+
+def reset_field(user_id: int) -> None:
+    users[user_id]['ships'] = copy.deepcopy(ships)
+    users[user_id]['filds'] = [
+# The loop [0 for _ in range(FIELD_SIZE)] for _ in range(FIELD_SIZE) is
+# a nested list comprehension
+        [0 for _ in range(FIELD_SIZE)]
+        for _ in range(FIELD_SIZE)
+    ]
