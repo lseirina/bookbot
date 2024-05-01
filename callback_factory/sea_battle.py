@@ -13,7 +13,7 @@ from aiogram.filters.callback_data import CallbackData
 
 
 BOT_TOKEN = '6883498485:AAGtOZFurG3T-H2oDNwhQcUqeUzlMfqcJHE'
-bot = Bot(BOT_TOKEN)
+bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher()
 
 
@@ -22,8 +22,8 @@ FIELD_SIZE = 8
 LEXICON = {
     '/start': 'Вот твое поле. Можешь делать ход',
     0: ' ',
-    1: '🌊',
-    2: '💥',
+    1: '+',
+    2: '-',
     'miss': 'Мимо!',
     'hit': 'Попал!',
     'used': 'Вы уже стреляли сюда!',
@@ -44,7 +44,7 @@ ships: list[list[int]] = [
 ]
 
 
-class FieldCallbackFactory(CallbackData, prifix='user_field'):
+class FieldCallbackFactory(CallbackData, prefix='user_field'):
     x: int
     y: int
 
@@ -60,7 +60,7 @@ def reset_field(user_id: int) -> None:
 
 
 def get_field_keyboard(user_id: int) -> InlineKeyboardMarkup:
-    array_buttons: list[int, list[int]] = []
+    array_buttons: list[list[InlineKeyboardButton]] = []
     for i in range(FIELD_SIZE):
         array_buttons.append([])
         for j in range(FIELD_SIZE):
@@ -86,14 +86,12 @@ async def process_start_command(message: Message):
 @dp.callback_query(FieldCallbackFactory.filter())
 async def process_category_press(callback: CallbackQuery,
                                  callback_data: FieldCallbackFactory):
-    field = callback.from_user.id['field']
-    ships = callback.from_user.id['ships']
-    if field[callback_data.x][callback_data.y] == 0 and \
-            ships[callback_data.x][callback_data.y] == 0:
+    field = users[callback.from_user.id]['field']
+    ships = users[callback.from_user.id]['ships']
+    if field[callback_data.x][callback_data.y] == 0 and ships[callback_data.x][callback_data.y] == 0:
         field[callback_data.x][callback_data.y] = 1
         answer = LEXICON['miss']
-    elif field[callback_data.x][callback_data.y] == 0 and \
-            ships[callback_data.x][callback_data.y] == 1:
+    elif field[callback_data.x][callback_data.y] == 0 and ships[callback_data.x][callback_data.y] == 1:
         field[callback_data.x][callback_data.y] = 2
         answer = LEXICON['hit']
     else:
@@ -108,3 +106,5 @@ async def process_category_press(callback: CallbackQuery,
         pass
 
     await callback.answer(answer)
+
+dp.run_polling(bot)
