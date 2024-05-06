@@ -1,8 +1,6 @@
 from aiogram import Bot, Dispatcher
 from aiogram.filters import CommandStart
 from aiogram.types import (
-    InlineKeyboardMarkup,
-    CallbackQuery,
     Message
 )
 from aiogram.filters.callback_data import CallbackData
@@ -14,7 +12,7 @@ bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher()
 
 
-class GoodsInlineKeyboardFactory(CallbackData, prefix='goods'):
+class GoodsCallbackFactory(CallbackData, prefix='goods'):
     category_id: int
     subcategory_id: int
     item_id: int
@@ -22,18 +20,18 @@ class GoodsInlineKeyboardFactory(CallbackData, prefix='goods'):
 
 builder = InlineKeyboardBuilder()
 
-button_1 = builder.button(
+builder.button(
     text='Category_1',
-    callback_data=GoodsInlineKeyboardFactory(
+    callback_data=GoodsCallbackFactory(
         category_id=1,
         subcategory_id=0,
         item_id=0
     )
 )
 
-button_2 = builder.button(
+builder.button(
     text='Category_2',
-    callback_data=GoodsInlineKeyboardFactory(
+    callback_data=GoodsCallbackFactory(
         category_id=2,
         subcategory_id=0,
         item_id=0
@@ -50,4 +48,6 @@ async def process_start_command(message: Message):
     )
 
 
-dp.run_polling(bot)
+if __name__ == '__main__':
+    dp.run_polling(bot)
+
