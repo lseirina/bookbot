@@ -30,6 +30,7 @@ async def process_start_command(message: Message):
         user_db[message.from_user.id] = deepcopy(user_dict_templates)
         print(user_db)
 
+
 @router.message(Command(commands='help'))
 async def process_help_command(message: Message):
     await message.answer(LEXICON[message.text])
